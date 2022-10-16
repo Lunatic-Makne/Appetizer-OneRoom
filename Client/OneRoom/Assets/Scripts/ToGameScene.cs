@@ -10,8 +10,12 @@ public class ToGameScene : MonoBehaviour
         SceneManager.LoadScene("Game");
     }
 
-    public void OnClick()
+    public void Close()
     {
-        
+#if UNITY_EDITOR
+        UnityEditor.EditorApplication.isPlaying = false;
+#else
+        Application.Quit();
+#endif
     }
 }
