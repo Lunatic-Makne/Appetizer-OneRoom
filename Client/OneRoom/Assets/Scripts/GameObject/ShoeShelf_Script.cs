@@ -1,3 +1,3 @@
-public class ShoeShelf_Script : MyClickObject
+public class ShoeShelf_Script : MyToggleClickObject
 {
 }

@@ -1,4 +1,4 @@
 
-public class Window_Script : MyClickObject
+public class Window_Script : MyToggleClickObject
 {
 }

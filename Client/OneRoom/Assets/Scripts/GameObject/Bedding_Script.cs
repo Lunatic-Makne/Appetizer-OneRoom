@@ -1,3 +1,3 @@
-public class Bedding_Script : MyClickObject
+public class Bedding_Script : MyToggleClickObject
 {
 }

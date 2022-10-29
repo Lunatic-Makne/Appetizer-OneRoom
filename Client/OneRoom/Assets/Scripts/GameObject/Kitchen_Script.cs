@@ -1,3 +1,3 @@
-public class Kitchen_Script : MyClickObject
+public class Kitchen_Script : MyToggleClickObject
 {
 }

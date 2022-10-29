@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-public class MyClickObject : MonoBehaviour
+public class MyToggleClickObject : MonoBehaviour
 {
     public GameObject parentObject;
     protected bool is_opened { set; get; } = false;
@@ -35,8 +35,6 @@ public class MyClickObject : MonoBehaviour
 
     public virtual void OnClicked()
     {
-        print("[Debug] OnClicked called.");
-
         is_opened = !is_opened;
 
         ChangeSprite();

@@ -1,3 +1,3 @@
-public class Washer_Script : MyClickObject
+public class Washer_Script : MyToggleClickObject
 {
 }

@@ -6,22 +6,36 @@ public class DerivedClickObject : MonoBehaviour
 
     void Start()
     {
-        GetComponent<SpriteRenderer>().forceRenderingOff = true;
+        if (parentObject != null)
+        {
+            GetComponent<SpriteRenderer>().forceRenderingOff = true;
+            GetComponent<BoxCollider2D>().enabled = false;
+        }
     }
 
     void Update()
     {
-        var clickComponent = parentObject.GetComponent<MyClickObject>();
-        if (clickComponent != null)
+        if (parentObject != null)
         {
-            if (clickComponent.IsOpened() && GetComponent<SpriteRenderer>().forceRenderingOff == true)
+            var clickComponent = parentObject.GetComponent<MyToggleClickObject>();
+            if (clickComponent != null)
             {
-                GetComponent<SpriteRenderer>().forceRenderingOff = false;
-            }
-            else if (!clickComponent.IsOpened() && !GetComponent<SpriteRenderer>().forceRenderingOff)
-            {
-                GetComponent<SpriteRenderer>().forceRenderingOff = true;
+                if (clickComponent.IsOpened() && GetComponent<SpriteRenderer>().forceRenderingOff == true)
+                {
+                    GetComponent<SpriteRenderer>().forceRenderingOff = false;
+                    GetComponent<BoxCollider2D>().enabled = true;
+                }
+                else if (!clickComponent.IsOpened() && !GetComponent<SpriteRenderer>().forceRenderingOff)
+                {
+                    GetComponent<SpriteRenderer>().forceRenderingOff = true;
+                    GetComponent<BoxCollider2D>().enabled = false;
+                }
             }
         }
+    }
+
+    public void OnClicked()
+    {
+        print(string.Format("DerivedClickObject OnClicked called. obj[{0}]", name));
     }
 }

@@ -1,4 +1,4 @@
 
-public class Refrigerator_Script : MyClickObject
+public class Refrigerator_Script : MyToggleClickObject
 {
 }
