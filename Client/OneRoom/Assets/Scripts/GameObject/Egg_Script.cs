@@ -1,5 +1,5 @@
 using UnityEngine;
 
-public class Egg_Script : DerivedClickObject
+public class Egg_Script : ItemObject
 {
 }

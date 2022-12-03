@@ -1,3 +1,3 @@
-public class Noodle_Script : DerivedClickObject
+public class Noodle_Script : ItemObject
 {
 }

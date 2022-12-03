@@ -1,4 +1,4 @@
 
-public class Cat2_Script : ItemObject
+public class Cat2_Script : DerivedClickObject
 {
 }
