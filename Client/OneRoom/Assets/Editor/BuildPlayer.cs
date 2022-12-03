@@ -37,7 +37,7 @@ public class BuildPlayer : MonoBehaviour
     {
         BuildPlayerOptions buildPlayerOptions = new BuildPlayerOptions();
         buildPlayerOptions.scenes = new[] { "Assets/StartUp.unity", "Assets/Game.unity" };
-        buildPlayerOptions.locationPathName = $"Builds/Windows/OneRoom.exe";
+        buildPlayerOptions.locationPathName = $"../../../Builds/Windows/OneRoom.exe";
         buildPlayerOptions.target = BuildTarget.StandaloneWindows;
         buildPlayerOptions.options = BuildOptions.None;
 
