@@ -7,7 +7,7 @@ public class ToGameScene : MonoBehaviour
 {
     public void SceneChange()
     {
-        SceneManager.LoadScene("Game_new");
+        SceneManager.LoadScene("Game");
     }
 
     public void Close()

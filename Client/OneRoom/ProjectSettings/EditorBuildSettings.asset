@@ -12,10 +12,10 @@ EditorBuildSettings:
     path: Assets/Scenes/StartUp.unity
     guid: 0c62ddc20d3890b4da061bee485fc7a8
   - enabled: 0
-    path: Assets/Scenes/Game.unity
+    path: Assets/Scenes/Game_Deprecated.unity
     guid: e8beac54ee636d440b8f8606cea47c34
   - enabled: 1
-    path: Assets/Scenes/Game_new.unity
+    path: Assets/Scenes/Game.unity
     guid: 563f40db5ff5c164bbe01d588f06c283
   m_configObjects:
     com.unity.adaptiveperformance.loader_settings: {fileID: 11400000, guid: 6321f4ead6d2f6e43994cf5b88b36244, type: 2}
