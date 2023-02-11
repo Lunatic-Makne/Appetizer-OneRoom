@@ -9,13 +9,18 @@ public class ToggleImage_Script : MonoBehaviour
     public Sprite OnImage;
     [SerializeField]
     public Sprite OffImage;
+    [SerializeField]
+    public GameObject childObject;
 
     private bool status { get; set; } = false;
 
     // Start is called before the first frame update
     void Start()
     {
-        
+        if (childObject != null)
+        {
+            childObject.SetActive(false);
+        }
     }
 
     // Update is called once per frame
@@ -34,10 +39,18 @@ public class ToggleImage_Script : MonoBehaviour
             if (status)
             {
                 image.sprite = OnImage;
+                if (childObject != null)
+                {
+                    childObject.SetActive(true);
+                }
             }
             else
             {
                 image.sprite= OffImage;
+                if (childObject != null)
+                {
+                    childObject.SetActive(false);
+                }
             }
         }
     }
