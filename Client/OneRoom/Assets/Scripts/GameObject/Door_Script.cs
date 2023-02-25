@@ -16,6 +16,9 @@ public class Door_Script : MonoBehaviour
     public bool Opened = false;
 
     [SerializeField]
+    public bool LockCheckWhenUpdate = false;
+
+    [SerializeField]
     public GameObject ParentObject;
 
     [SerializeField]
@@ -27,9 +30,38 @@ public class Door_Script : MonoBehaviour
         
     }
 
+    void LockCheck()
+    {
+        var correct = true;
+        if (PasswordPannel != null && PasswordPannel.GetComponentInChildren<PasswordPannel_Script>() != null)
+        {
+            correct = PasswordPannel.GetComponentInChildren<PasswordPannel_Script>().IsCorrect();
+        }
+
+        if (correct)
+        {
+            if (GetComponent<Image>() != null && OpenDoorSprite != null)
+            {
+                GetComponent<Image>().sprite = OpenDoorSprite;
+            }
+
+            // 문이 열릴 때 패스워드 패널이 열려 있으니 닫아준다.
+            if (PasswordPannel != null && PasswordPannel.activeSelf == true)
+            {
+                PasswordPannel.SetActive(false);
+            }
+
+            Opened = true;
+        }
+    }
+
     // Update is called once per frame
     void Update()
     {
+        if (Opened == false && LockCheckWhenUpdate)
+        {
+            LockCheck();
+        }
     }
 
     private void OnMouseDown()
@@ -41,39 +73,15 @@ public class Door_Script : MonoBehaviour
     {
         if (Opened == false)
         {
-            var correct = true;
-            if (PasswordPannel != null && PasswordPannel.GetComponent<PasswordPannel_Script>() != null)
+            if (LockCheckWhenUpdate == false)
             {
-                correct = PasswordPannel.GetComponent<PasswordPannel_Script>().IsCorrect();
-            }
-
-            if (correct)
-            {
-                if (GetComponent<Image>() != null && OpenDoorSprite != null)
-                {
-                    GetComponent<Image>().sprite = OpenDoorSprite;    
-                }
-
-                // 문이 열릴 때 패스워드 패널이 열려 있으니 닫아준다.
-                if (PasswordPannel != null && PasswordPannel.activeSelf == true)
-                {
-                    PasswordPannel.SetActive(false);
-                }
-
-                Opened = true;
+                LockCheck();
             }
             else
             {
-                if (PasswordPannel != null)
+                if (PasswordPannel != null && PasswordPannel.activeSelf == false)
                 {
-                    if (PasswordPannel.activeSelf == true)
-                    {
-                        PasswordPannel.SetActive(false);
-                    }
-                    else
-                    {
-                        PasswordPannel.SetActive(true);
-                    }
+                    PasswordPannel.SetActive(true);
                 }
             }
         }
