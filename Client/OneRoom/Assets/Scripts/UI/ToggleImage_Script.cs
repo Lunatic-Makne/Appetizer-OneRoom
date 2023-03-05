@@ -12,7 +12,7 @@ public class ToggleImage_Script : MonoBehaviour
     [SerializeField]
     public GameObject childObject;
 
-    private bool status { get; set; } = false;
+    public bool status { get; set; } = false;
 
     // Start is called before the first frame update
     void Start()

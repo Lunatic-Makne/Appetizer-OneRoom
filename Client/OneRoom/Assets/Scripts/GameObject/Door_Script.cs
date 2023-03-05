@@ -88,8 +88,8 @@ public class Door_Script : MonoBehaviour
         else
         {
             // 오픈 이후엔 문을 통해 다른 씬으로 넘어가야 한다.
-            ParentObject.SetActive(false);
-            LinkedObject.SetActive(true);
+            if (ParentObject != null) { ParentObject.SetActive(false); }
+            if (LinkedObject != null) { LinkedObject.SetActive(true); }
         }
     }
 }
