@@ -10,6 +10,7 @@ public class Laptop_Password_Script : MonoBehaviour
     public string _Password;
     public GameObject _PrevView;
     public GameObject _NextView;
+    public GameObject _ErrorText;
 
     // Start is called before the first frame update
     void Start()
@@ -44,6 +45,10 @@ public class Laptop_Password_Script : MonoBehaviour
         {
             OnCorrect();
         }
+        else
+        {
+            _ErrorText.SetActive(true);
+        }
     }
 
     public void PasswordEntered(TMP_InputField inputField)
@@ -53,6 +58,10 @@ public class Laptop_Password_Script : MonoBehaviour
         if (_Password == inputField.text)
         {
             OnCorrect();
+        }
+        else
+        {
+            _ErrorText.SetActive(true);
         }
     }
 }
