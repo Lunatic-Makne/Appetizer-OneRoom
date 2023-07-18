@@ -46,16 +46,30 @@ public class Elevator_Door_Script : MonoBehaviour
     private float BlinkSpeed = 0.5f;
     [SerializeField]
     private Int32 BlinkCount = 3;
+    [SerializeField]
+    private float DoorOpenDelaySec = 1.0f;
 
     [SerializeField]
     private Int32 CurrentFloor = 1;
 
+    [SerializeField]
+    private GameObject CurrentViewObject;
+
+    [SerializeField]
+    private GameObject NextViewObject;
+    [SerializeField]
+    private Int32 NextViewFloor = 0;
+
+    [SerializeField]
+    private List<Int32> AnswerList;
+
+    private Queue<Int32> Inputed = new Queue<Int32>();
+
     private bool DoingAction = false;
-    private bool Blinking = false;
 
     private void ChangeSprite(Int32 frame)
     {
-        print(string.Format("ChangeSprite frame[{0}]", frame));
+        Debug.Log(string.Format("ChangeSprite frame[{0}]", frame));
 
         var image = GetComponent<Image>();
         if (image == null) return;
@@ -63,33 +77,52 @@ public class Elevator_Door_Script : MonoBehaviour
         image.sprite = SpriteList[frame].sprite;
     }
 
+    public void FadeOutAfterCallbcak()
+    {
+        CurrentViewObject.SetActive(false);
+    }
+
+    public void ArrivedTopFloor()
+    {
+        var fade_script = CurrentViewObject.GetComponent<FadeInOut_Script>();
+        if (fade_script == null) return;
+
+        fade_script.AfterFadeOutCallback = new FadeInOut_Script.FadeCallback(FadeOutAfterCallbcak);
+        fade_script.FadeOut();
+
+        DoingAction = false;
+    }
+
     private IEnumerator OpenDoor()
     {
-        print("OpenDoor Start");
+        Debug.Log("OpenDoor Start");
+
+        if (DisplayFloorObject.activeSelf == false)
+        {
+            DisplayFloorObject.SetActive(true);
+        }
+
+        yield return new WaitForSeconds(DoorOpenDelaySec);
 
         while (true)
         {
-            if (Blinking)
-            {
-                yield return null;
-                continue;
-            }
-
-            if (DisplayFloorObject.activeSelf == false) 
-            { 
-                DisplayFloorObject.SetActive(true);
-            }
-
             DoorFrame++;
 
             if (DoorFrame >= SpriteList.Count)
             {
                 DoorFrame = SpriteList.Count - 1;
-                print("OpenDoor End");
+                Debug.Log("OpenDoor End");
 
-                yield return new WaitForSeconds(DoorOpenDuration);
-
-                StartCoroutine("CloseDoor");
+                if (CurrentFloor == NextViewFloor)
+                {
+                    ArrivedTopFloor();
+                }
+                else
+                {
+                    yield return new WaitForSeconds(DoorOpenDuration);
+                    StartCoroutine("CloseDoor");
+                }
+                
                 yield break;
             }
 
@@ -101,7 +134,7 @@ public class Elevator_Door_Script : MonoBehaviour
 
     private IEnumerator CloseDoor()
     {
-        print("CloseDoor Start");
+        Debug.Log("CloseDoor Start");
 
         while(true)
         {
@@ -110,7 +143,7 @@ public class Elevator_Door_Script : MonoBehaviour
             if (DoorFrame < 0)
             {
                 DoorFrame = 0;
-                print("CloseDoor End");
+                Debug.Log("CloseDoor End");
                 DoingAction = false;
                 yield break;
             }
@@ -125,8 +158,7 @@ public class Elevator_Door_Script : MonoBehaviour
     private IEnumerator BlinkImpl(object obj)
     {
         GameObject gameObject = obj as GameObject;
-        print("Blink Start");
-        Blinking = true;
+        Debug.Log("Blink Start");
         DisplayFloorObject.SetActive(false);
 
         for (int i = 0; i < BlinkCount; i++)
@@ -138,7 +170,7 @@ public class Elevator_Door_Script : MonoBehaviour
         }
 
         gameObject.SetActive(false);
-        Blinking = false;
+        StartCoroutine("OpenDoor");
     }
 
     private void UpdateDisplayPannel()
@@ -150,11 +182,35 @@ public class Elevator_Door_Script : MonoBehaviour
         }
     }
 
+    private bool CheckAnswer()
+    {
+        if (Inputed.Count < AnswerList.Count) { return false; }
+
+        var temp_stack = new Queue<Int32>();
+        bool result = true;
+
+        foreach(var answer_floor in AnswerList)
+        {
+            var input = Inputed.Dequeue();
+            temp_stack.Enqueue(input);
+
+            if (input != answer_floor)
+            {
+                result = false;
+            }
+        }
+
+        Inputed = temp_stack;
+        Inputed.Dequeue();
+
+        return result;
+    }
+
     public void OnFloorButtonSelected(Int32 floor_button)
     {
         if (DoingAction) { return; }
 
-        print(string.Format("Button Clicked: {0}", floor_button));
+        Debug.Log(string.Format("Button Clicked: {0}", floor_button));
 
         DoingAction = true;
 
@@ -166,11 +222,23 @@ public class Elevator_Door_Script : MonoBehaviour
         {
             StartCoroutine("BlinkImpl", DownArrowObject);
         }
+        else
+        {
+            StartCoroutine("OpenDoor");
+        }
 
-        StartCoroutine("OpenDoor");
+        Inputed.Enqueue(floor_button);
+        
+        if (CheckAnswer())
+        {
+            floor_button = NextViewFloor;
+            NextViewObject.SetActive(true);
+        }
 
         CurrentFloor = floor_button;
 
         UpdateDisplayPannel();
+
+        
     }
 }
