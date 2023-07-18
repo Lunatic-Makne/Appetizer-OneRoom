@@ -40,68 +40,22 @@ public class ChangeImage_Script : MonoBehaviour
         
     }
 
-    private void ChangeSprite(Int32 frame)
-    {
-        Debug.Log(string.Format("ChangeSprite frame[{0}]", frame));
-
-        var image = GetComponent<Image>();
-        if (image == null) return;
-
-        image.sprite = ImageInfos[frame].sprite;
-    }
-
-    [SerializeField]
-    public bool ChangeStreak = false;
-
-    [SerializeField]
-    public float ChangeImageDelaySec = 0.0f;
-
-    private IEnumerator ChangeImageStreak()
-    {
-        while (true)
-        {
-            CurrentIndex++;
-
-            if (CurrentIndex >= ImageInfos.Count)
-            {
-                if (OptionType == EOptionType.DISPOSE_WHEN_END)
-                {
-                    if (ParentObject != null)
-                    {
-                        ParentObject.SetActive(false);
-                    }
-                }
-                break;
-            }
-
-            ChangeSprite(CurrentIndex);
-            yield return new WaitForSeconds(ChangeImageDelaySec);
-        }
-    }
-
     public void OnClick()
     {
         if (GetComponent<Image>() != null)
         {
-            if (ChangeStreak)
+            // Change To Next Image
+            if (CurrentIndex + 1 < ImageInfos.Count)
             {
-                StartCoroutine(ChangeImageStreak());
-            }
-            else
-            {
-                // Change To Next Image
-                if (CurrentIndex + 1 < ImageInfos.Count)
-                {
-                    CurrentIndex = CurrentIndex + 1;
+                CurrentIndex = CurrentIndex + 1;
 
-                    ChangeSprite(CurrentIndex);
-                }
-                else if (OptionType == EOptionType.DISPOSE_WHEN_END)
+                GetComponent<Image>().sprite = ImageInfos[CurrentIndex].sprite;
+            }
+            else if (OptionType == EOptionType.DISPOSE_WHEN_END)
+            {
+                if (ParentObject != null)
                 {
-                    if (ParentObject != null)
-                    {
-                        ParentObject.SetActive(false);
-                    }
+                    ParentObject.SetActive(false);
                 }
             }
         }
