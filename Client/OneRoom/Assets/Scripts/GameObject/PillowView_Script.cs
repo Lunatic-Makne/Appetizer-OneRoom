@@ -12,9 +12,29 @@ public class PillowView_Script : MonoBehaviour
         ParentObject?.SetActive(true);
     }
 
+    [SerializeField]
+    private GameObject CloseObject;
+    public void BeforeFadeOut()
+    {
+        var door_script = CloseObject?.GetComponent<Door_Script>();
+        if (door_script != null)
+        {
+            if (door_script.LinkedObject != null)
+            {
+                door_script.LinkedObject.SetActive(true);
+            }
+        }
+    }
+
     public void AfterFadeOut()
     {
-        ParentObject?.SetActive(false);
+        DoingAction = false;
+
+        var door_script = CloseObject?.GetComponent<Door_Script>();
+        if (door_script != null )
+        {
+            door_script.OnClick();
+        }
     }
 
     private void Awake()
@@ -23,7 +43,23 @@ public class PillowView_Script : MonoBehaviour
         if (fade_script != null)
         {
             fade_script.BeforeFadeInCallback = new FadeInOut_Script.FadeCallback(BeforeFadeIn);
+            fade_script.BeforeFadeOutCallback = new FadeInOut_Script.FadeCallback(BeforeFadeOut);
             fade_script.AfterFadeOutCallback = new FadeInOut_Script.FadeCallback(AfterFadeOut);
+        }
+    }
+
+    public bool DoingAction { get; set; } = false;
+    
+    public void OnClose()
+    {
+        var fade_script = ParentObject?.GetComponent<FadeInOut_Script>();
+        if (fade_script != null)
+        {
+            if (DoingAction == false)
+            {
+                DoingAction = true;
+                fade_script.FadeOut();
+            }
         }
     }
 

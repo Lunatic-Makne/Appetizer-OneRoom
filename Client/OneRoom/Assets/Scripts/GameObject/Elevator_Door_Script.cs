@@ -67,6 +67,9 @@ public class Elevator_Door_Script : MonoBehaviour
 
     private bool DoingAction = false;
 
+    [SerializeField]
+    private GameObject RootObject;
+
     private void ChangeSprite(Int32 frame)
     {
         Debug.Log(string.Format("ChangeSprite frame[{0}]", frame));
@@ -91,6 +94,14 @@ public class Elevator_Door_Script : MonoBehaviour
         fade_script.FadeOut();
 
         DoingAction = false;
+        if (RootObject != null)
+        {
+            var script = RootObject.GetComponent<PillowView_Script>();
+            if (script != null)
+            {
+                script.DoingAction = false;
+            }
+        }
     }
 
     private IEnumerator OpenDoor()
@@ -145,6 +156,14 @@ public class Elevator_Door_Script : MonoBehaviour
                 DoorFrame = 0;
                 Debug.Log("CloseDoor End");
                 DoingAction = false;
+                if (RootObject != null)
+                {
+                    var script = RootObject.GetComponent<PillowView_Script>();
+                    if (script != null)
+                    {
+                        script.DoingAction = false;
+                    }
+                }
                 yield break;
             }
 
@@ -213,6 +232,14 @@ public class Elevator_Door_Script : MonoBehaviour
         Debug.Log(string.Format("Button Clicked: {0}", floor_button));
 
         DoingAction = true;
+        if (RootObject != null)
+        {
+            var script = RootObject.GetComponent<PillowView_Script>();
+            if (script != null)
+            {
+                script.DoingAction = true;
+            }
+        }
 
         if (floor_button > CurrentFloor)
         {
